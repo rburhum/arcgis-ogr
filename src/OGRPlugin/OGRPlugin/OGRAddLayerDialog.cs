@@ -35,7 +35,9 @@ namespace GDAL.OGRPlugin
         #region UI event handlers
         private void btnOpenDataSource_Click(object sender, EventArgs e)
         {
+           
             m_workspace = OpenPlugInWorkspace();
+            System.Windows.Forms.MessageBox.Show("Opened");
 
             ListFeatureClasses();
         }
@@ -90,9 +92,20 @@ namespace GDAL.OGRPlugin
                 txtPath.Text = path;
 
                 //get the type using the ProgID
-                Type t = Type.GetTypeFromProgID("esriGeoDatabase.SimplePointPluginWorkspaceFactory");
+                Type t = Type.GetTypeFromProgID("esriGeoDatabase.OGRPluginWorkspaceFactory");
+
+                if (t == null)
+                    MessageBox.Show("T is null");
+                else
+                    MessageBox.Show("T was found");
+
                 //Use activator in order to create an instance of the workspace factory
                 IWorkspaceFactory workspaceFactory = Activator.CreateInstance(t) as IWorkspaceFactory;
+
+                if (workspaceFactory == null)
+                    MessageBox.Show("Factory is null");
+                else
+                    MessageBox.Show("Factory was found");
 
                 //open the workspace
                 return workspaceFactory.OpenFromFile(System.IO.Path.GetDirectoryName(path), 0);
@@ -106,7 +119,7 @@ namespace GDAL.OGRPlugin
 
         private void ListFeatureClasses()
         {
-            lstDeatureClasses.Items.Clear();
+            lstFeatureClasses.Items.Clear();
 
             if (null == m_workspace)
                 return;
@@ -116,14 +129,14 @@ namespace GDAL.OGRPlugin
             IDatasetName dsName;
             while ((dsName = datasetNames.Next()) != null)
             {
-                lstDeatureClasses.Items.Add(dsName.Name);
+                lstFeatureClasses.Items.Add(dsName.Name);
             }
 
             //select the first dataset on the list
-            if (lstDeatureClasses.Items.Count > 0)
+            if (lstFeatureClasses.Items.Count > 0)
             {
-                lstDeatureClasses.SelectedIndex = 0;
-                lstDeatureClasses.Refresh();
+                lstFeatureClasses.SelectedIndex = 0;
+                lstFeatureClasses.Refresh();
             }
         }
 
@@ -134,11 +147,11 @@ namespace GDAL.OGRPlugin
                 if (null == m_hookHelper || null == m_workspace)
                     return;
 
-                if (string.Empty == (string)lstDeatureClasses.SelectedItem)
+                if (string.Empty == (string)lstFeatureClasses.SelectedItem)
                     return;
 
                 //get the selected item from the listbox
-                string dataset = (string)lstDeatureClasses.SelectedItem;
+                string dataset = (string)lstFeatureClasses.SelectedItem;
 
                 //cast the workspace into a feature workspace
                 IFeatureWorkspace featureWorkspace = m_workspace as IFeatureWorkspace;

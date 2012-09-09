@@ -41,13 +41,12 @@ namespace GDAL.OGRPlugin
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OGRAddLayerDialog));
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnOpenDataSource = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lblDatasets = new System.Windows.Forms.Label();
-            this.lstDeatureClasses = new System.Windows.Forms.ListBox();
+            this.lstFeatureClasses = new System.Windows.Forms.ListBox();
             this.txtPath = new System.Windows.Forms.TextBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox1.SuspendLayout();
@@ -75,7 +74,6 @@ namespace GDAL.OGRPlugin
             // 
             // btnOpenDataSource
             // 
-            this.btnOpenDataSource.Image = ((System.Drawing.Image)(resources.GetObject("btnOpenDataSource.Image")));
             this.btnOpenDataSource.Location = new System.Drawing.Point(249, 17);
             this.btnOpenDataSource.Name = "btnOpenDataSource";
             this.btnOpenDataSource.Size = new System.Drawing.Size(23, 23);
@@ -87,7 +85,7 @@ namespace GDAL.OGRPlugin
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.lblDatasets);
-            this.groupBox1.Controls.Add(this.lstDeatureClasses);
+            this.groupBox1.Controls.Add(this.lstFeatureClasses);
             this.groupBox1.Controls.Add(this.txtPath);
             this.groupBox1.Controls.Add(this.btnOpenDataSource);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
@@ -99,20 +97,20 @@ namespace GDAL.OGRPlugin
             // lblDatasets
             // 
             this.lblDatasets.AutoSize = true;
-            this.lblDatasets.Location = new System.Drawing.Point(6, 51);
+            this.lblDatasets.Location = new System.Drawing.Point(6, 50);
             this.lblDatasets.Name = "lblDatasets";
             this.lblDatasets.Size = new System.Drawing.Size(52, 13);
             this.lblDatasets.TabIndex = 5;
             this.lblDatasets.Text = "Datasets:";
             // 
-            // lstDeatureClasses
+            // lstFeatureClasses
             // 
-            this.lstDeatureClasses.FormattingEnabled = true;
-            this.lstDeatureClasses.Location = new System.Drawing.Point(6, 67);
-            this.lstDeatureClasses.Name = "lstDeatureClasses";
-            this.lstDeatureClasses.Size = new System.Drawing.Size(266, 173);
-            this.lstDeatureClasses.TabIndex = 4;
-            this.lstDeatureClasses.DoubleClick += new System.EventHandler(this.lstDeatureClasses_DoubleClick);
+            this.lstFeatureClasses.FormattingEnabled = true;
+            this.lstFeatureClasses.Location = new System.Drawing.Point(6, 80);
+            this.lstFeatureClasses.Name = "lstFeatureClasses";
+            this.lstFeatureClasses.Size = new System.Drawing.Size(266, 160);
+            this.lstFeatureClasses.TabIndex = 4;
+            this.lstFeatureClasses.DoubleClick += new System.EventHandler(this.lstDeatureClasses_DoubleClick);
             // 
             // txtPath
             // 
@@ -122,7 +120,7 @@ namespace GDAL.OGRPlugin
             this.txtPath.Size = new System.Drawing.Size(237, 20);
             this.txtPath.TabIndex = 3;
             // 
-            // OpenSimplePointDlg
+            // OGRAddLayerDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -131,9 +129,9 @@ namespace GDAL.OGRPlugin
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.btnCancel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "OpenSimplePointDlg";
+            this.Name = "OGRAddLayerDialog";
             this.ShowInTaskbar = false;
-            this.Text = "OpenSimplePointDlg";
+            this.Text = "Add OGR Layer";
             this.TopMost = true;
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -149,7 +147,7 @@ namespace GDAL.OGRPlugin
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.TextBox txtPath;
-        private System.Windows.Forms.ListBox lstDeatureClasses;
+        private System.Windows.Forms.ListBox lstFeatureClasses;
         private System.Windows.Forms.Label lblDatasets;
     }
 }
