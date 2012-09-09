@@ -159,11 +159,6 @@ namespace GDAL.OGRPlugin
             try
             {
                 OSGeo.OGR.Ogr.RegisterAll();
-                System.Windows.Forms.MessageBox.Show("Registered");
-                OSGeo.OGR.DataSource ds = OSGeo.OGR.Ogr.Open("C:\\Users\\rburhum\\Desktop\\data\\PLSSTownship.shp", 0);
-                System.Windows.Forms.MessageBox.Show("Opened");
-                System.Windows.Forms.MessageBox.Show("I have " + ds.GetLayerCount() + " layers");
-
                 OGRAddLayerDialog dlg = new OGRAddLayerDialog(m_hookHelper);
                 dlg.Show();
             }

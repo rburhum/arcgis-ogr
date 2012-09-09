@@ -36,21 +36,20 @@ using System.Runtime.InteropServices;
 using ESRI.ArcGIS.esriSystem;
 using ESRI.ArcGIS.Geodatabase;
 
+using OSGeo.OGR;
 
 namespace GDAL.OGRPlugin
 {
     [ComVisible(false)]
     internal class OGRWorkspace : IPlugInWorkspaceHelper, IPlugInMetadataPath
     {
-        private string m_sWkspPath;
+        private string m_connString;
+        private OSGeo.OGR.DataSource m_datasource;
 
-        public OGRWorkspace(string wkspPath)
+        public OGRWorkspace(OSGeo.OGR.DataSource ds, string connString)
         {
-            //HIGHLIGHT: set up workspace path
-            if (System.IO.Directory.Exists(wkspPath))
-                m_sWkspPath = wkspPath;
-            else
-                m_sWkspPath = null;
+            m_connString = connString;
+            m_datasource = ds;
         }
 
         #region IPlugInWorkspaceHelper Members
@@ -64,35 +63,44 @@ namespace GDAL.OGRPlugin
 
         public IArray get_DatasetNames(esriDatasetType DatasetType)
         {
-            if (m_sWkspPath == null)
+            if (m_connString == null)
                 return null;
 
-            //HIGHLIGHT: get_DatasetNames - Go through wksString to look for csp files
-            if (DatasetType != esriDatasetType.esriDTAny &&
-                DatasetType != esriDatasetType.esriDTTable)
-                return null;
-
-            string[] sFiles = System.IO.Directory.GetFiles(m_sWkspPath, "*.csp");
-            if (sFiles == null || sFiles.Length == 0)
-                return null;
-
-            IArray datasets = new ArrayClass();
-            foreach (string sFileName in sFiles)
+            if (DatasetType == esriDatasetType.esriDTAny ||
+                DatasetType == esriDatasetType.esriDTFeatureClass)
             {
-                OGRDataset ds = new OGRDataset(m_sWkspPath, System.IO.Path.GetFileNameWithoutExtension(sFileName));
-                datasets.Add(ds);
+                IArray datasets = new ArrayClass();
+
+                int count = m_datasource.GetLayerCount();
+
+                for (int i = 0; i < count; i++)
+                {
+                    OSGeo.OGR.Layer layer = m_datasource.GetLayerByIndex(i);
+
+                    OGRDataset dataset = new OGRDataset(layer);
+
+                    datasets.Add(dataset);
+                }
+
+                return datasets;
             }
 
-            return datasets;
+            return null;
+
         }
 
         public IPlugInDatasetHelper OpenDataset(string localName)
         {
-            //HIGHLIGHT: OpenDataset - give workspace path and local file name
-            if (m_sWkspPath == null)
+            if (m_connString == null)
                 return null;
 
-            OGRDataset ds = new OGRDataset(m_sWkspPath, localName);
+            OSGeo.OGR.Layer layer = m_datasource.GetLayerByName(localName);
+
+            if (layer == null)
+                return null;
+            
+            OGRDataset ds = new OGRDataset(layer);
+
             return (IPlugInDatasetHelper)ds;
         }
 
@@ -105,7 +113,7 @@ namespace GDAL.OGRPlugin
         {
             get
             {
-                return true;
+                return false;
             }
         }
 
@@ -113,10 +121,11 @@ namespace GDAL.OGRPlugin
 
         #region IPlugInMetadataPath Members
 
-        //HIGHLIGHT: implement metadata so export data in arcmap works correctly
+        //ugh, sorry, I am doing this for free and I hate metadata. No man, *you* do it!
+
         public string get_MetadataPath(string localName)
         {
-            return System.IO.Path.Combine(m_sWkspPath, localName + ".csp.xml");
+            return "";
         }
 
         #endregion

@@ -37,6 +37,10 @@ using ESRI.ArcGIS.ADF;
 using ESRI.ArcGIS.esriSystem;
 using ESRI.ArcGIS.Geodatabase;
 
+using System.Windows.Forms;
+
+using OSGeo.OGR;
+
 
 namespace GDAL.OGRPlugin
 {
@@ -80,6 +84,7 @@ namespace GDAL.OGRPlugin
                     return "OGR Feature Class";
                 case esriDatasetType.esriDTFeatureDataset:
                     return "OGR Feature Dataset";
+
                 default:
                     return null;
             }
@@ -88,29 +93,43 @@ namespace GDAL.OGRPlugin
         public string get_WorkspaceDescription(bool plural)
         {
             return "OGR Workspace";
-            /*if (plural)
-                return "OGR Data";
-            else
-                return "OGR Datasets";
-             */ 
         }
 
         public bool CanSupportSQL
         {
+            //TODO: try switching this to true later
             get { return false; }
         }
 
         public string DataSourceName
         {
-            //HIGHLIGHT: ProgID = esriGeoDatabase.<DataSourceName>WorkspaceFactory
+            /*
+             * This is how the prog id will be found by the PluginWorkspaceHelper
+             * it will expect a string in the form of
+             * 
+             *        ProgID = esriGeoDatabase.<DataSourceName>WorkspaceFactory
+             *        
+             * so in our case it will be:
+             * 
+             *       ProgID = esriGeoDatabase.OGRPluginWorkspaceFactory
+             *       
+             * see: 
+             *    http://help.arcgis.com/en/sdk/10.0/arcobjects_net/conceptualhelp/index.html#/Adding_a_plug_in_data_source_programmatically/000100000305000000/
+             */
             get { return "OGRPlugin"; }
         }
 
+
         public bool ContainsWorkspace(string parentDirectory, IFileNames fileNames)
         {
-            if (fileNames == null)
-                return this.IsWorkspace(parentDirectory);
+            // TODO: Look into openshared to see if we can optimize it
 
+            if (this.IsWorkspace(parentDirectory))
+                return true;
+            else if (fileNames == null)
+                return false; //isWorkspace is false and no filenames
+
+            // isWorkspace is false, but at least we can try other files
             if (!System.IO.Directory.Exists(parentDirectory))
                 return false;
 
@@ -120,7 +139,7 @@ namespace GDAL.OGRPlugin
                 if (fileNames.IsDirectory())
                     continue;
 
-                if (System.IO.Path.GetExtension(sFileName).Equals(".csp"))
+                if (this.IsWorkspace(parentDirectory + "\\" + sFileName))
                     return true;
             }
 
@@ -129,7 +148,6 @@ namespace GDAL.OGRPlugin
 
         public UID WorkspaceFactoryTypeID
         {
-            //HIGHLIGHT: Generate a new GUID to identify the workspace factory
             get
             {
                 UID wkspFTypeID = new UIDClass();
@@ -140,15 +158,18 @@ namespace GDAL.OGRPlugin
 
         public bool IsWorkspace(string wksString)
         {
-            //TODO: IsWorkspace is True when folder contains csp files
-            if (System.IO.Directory.Exists(wksString))
-                return System.IO.Directory.GetFiles(wksString, "*.csp").Length > 0;
-            return false;
+            OSGeo.OGR.DataSource ds = null;
+            ds = OSGeo.OGR.Ogr.OpenShared(wksString, 0);
+
+            if (ds != null)
+                return true;
+            else
+                return false;
         }
 
         public esriWorkspaceType WorkspaceType
         {
-            //HIGHLIGHT: WorkspaceType - FileSystem type strongly recommended
+            //TODO: WorkspaceType in OGR can be remote - test later what happens when we change this
             get
             {
                 return esriWorkspaceType.esriFileSystemWorkspace;
@@ -157,35 +178,35 @@ namespace GDAL.OGRPlugin
 
         public IPlugInWorkspaceHelper OpenWorkspace(string wksString)
         {
-            //HIGHLIGHT: OpenWorkspace
-            //Don't have to check if wksString contains valid data file. 
-            //Any valid folder path is fine since we want paste to work in any folder
-            if (System.IO.Directory.Exists(wksString))
+            OSGeo.OGR.DataSource ds = OSGeo.OGR.Ogr.OpenShared(wksString, 0);
+
+            if (ds != null)
             {
-                OGRWorkspace openWksp = new OGRWorkspace(wksString);
-                return (IPlugInWorkspaceHelper)openWksp;
+                OGRWorkspace openWksp = new OGRWorkspace(ds, wksString);
+                return (IPlugInWorkspaceHelper)openWksp; 
             }
+
             return null;
         }
 
         public string GetWorkspaceString(string parentDirectory, IFileNames fileNames)
         {
-            //return the path to the workspace location if 
-            if (!System.IO.Directory.Exists(parentDirectory))
+            if (fileNames == null)
+            {
+                //could be a database connection
+                if (this.IsWorkspace(parentDirectory))
+                    return parentDirectory;
+
                 return null;
+            }
 
-            if (fileNames == null)	//don't have to check .csp file
-                return parentDirectory;
+            // GetWorkspaceString - claim and remove file names from list. What a silly design!
 
-            //HIGHLIGHT: GetWorkspaceString - claim and remove file names from list
             string sFileName;
             bool fileFound = false;
             while ((sFileName = fileNames.Next()) != null)
             {
-                if (fileNames.IsDirectory())
-                    continue;
-
-                if (System.IO.Path.GetExtension(sFileName).Equals(".csp"))
+                if (this.IsWorkspace(sFileName))
                 {
                     fileFound = true;
                     fileNames.Remove();

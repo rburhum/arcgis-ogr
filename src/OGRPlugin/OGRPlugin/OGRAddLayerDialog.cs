@@ -15,7 +15,7 @@ namespace GDAL.OGRPlugin
 {
     public partial class OGRAddLayerDialog : Form
     {
-        #region class memebers
+        #region class members
         private IHookHelper m_hookHelper = null;
         IWorkspace m_workspace = null;
         #endregion
@@ -24,7 +24,7 @@ namespace GDAL.OGRPlugin
         public OGRAddLayerDialog(IHookHelper hookHelper)
         {
             if (null == hookHelper)
-                throw new Exception("Hook helper is not initialize");
+                throw new Exception("Hook helper is not initialized");
 
             InitializeComponent();
 
@@ -37,7 +37,6 @@ namespace GDAL.OGRPlugin
         {
            
             m_workspace = OpenPlugInWorkspace();
-            System.Windows.Forms.MessageBox.Show("Opened");
 
             ListFeatureClasses();
         }
@@ -66,8 +65,8 @@ namespace GDAL.OGRPlugin
         private string GetFileName()
         {
             OpenFileDialog dlg = new OpenFileDialog();
-            dlg.Filter = "Simple Point (*.csp)|*.csp";
-            dlg.Title = "Open Simple Point file";
+            //dlg.Filter = "Simple Point (*.csp)|*.csp";
+            dlg.Title = "Open file";
             dlg.RestoreDirectory = true;
             dlg.CheckPathExists = true;
             dlg.CheckFileExists = true;
@@ -94,21 +93,18 @@ namespace GDAL.OGRPlugin
                 //get the type using the ProgID
                 Type t = Type.GetTypeFromProgID("esriGeoDatabase.OGRPluginWorkspaceFactory");
 
-                if (t == null)
-                    MessageBox.Show("T is null");
-                else
-                    MessageBox.Show("T was found");
-
                 //Use activator in order to create an instance of the workspace factory
                 IWorkspaceFactory workspaceFactory = Activator.CreateInstance(t) as IWorkspaceFactory;
 
-                if (workspaceFactory == null)
-                    MessageBox.Show("Factory is null");
-                else
-                    MessageBox.Show("Factory was found");
+                MessageBox.Show("Opening " + path);
+                IWorkspace pWorspace = workspaceFactory.OpenFromFile(path, 0);
 
-                //open the workspace
-                return workspaceFactory.OpenFromFile(System.IO.Path.GetDirectoryName(path), 0);
+                if (pWorspace == null)
+                    MessageBox.Show("Workspace is null");
+                else
+                    MessageBox.Show("Workspace has stuff");
+               
+                return pWorspace;              
             }
             catch (Exception ex)
             {
