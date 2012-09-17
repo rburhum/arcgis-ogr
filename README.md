@@ -1,5 +1,3 @@
-#NOT COMPLETE - STILL UNDER DEVELOPMENT
-
 # <a href="http://www.amigocloud.com">AmigoCloud</a>'s GDAL/OGR Plugin for ArcGIS
 This repository contains the source code for the GDAL/OGR Plugin which is part of the <a href="http://www.amigocloud.com">AmigoCloud Mobile Data Collection Suite</a>
 
