@@ -89,6 +89,61 @@ namespace GDAL.OGRPlugin
 
         }
 
+        public object get_mapped_value(OSGeo.OGR.Feature feature, int esriFieldsIndex)
+        {
+            // get the ESRI Field
+            ESRI.ArcGIS.Geodatabase.IField pField = m_fields.get_Field(esriFieldsIndex);
+
+            if (esriFieldsIndex == m_oidFieldIndex)
+                return feature.GetFID();
+
+            if (esriFieldsIndex == m_geometryFieldIndex)
+            {
+                System.Diagnostics.Debug.Assert(false);
+                return null; // this should never be called for geometries
+            }
+
+            int ogrIndex = (int) m_fieldMapping[esriFieldsIndex];
+
+            if (!feature.IsFieldSet(ogrIndex))
+                return null;
+
+            switch (feature.GetFieldType(ogrIndex))
+            {
+                // must be kept in sync with utilities library
+
+                case OSGeo.OGR.FieldType.OFTInteger:
+                    return feature.GetFieldAsInteger(ogrIndex);                    
+                    
+                case OSGeo.OGR.FieldType.OFTReal:
+                    return feature.GetFieldAsDouble(ogrIndex);
+                    
+                case OSGeo.OGR.FieldType.OFTString:
+                    return feature.GetFieldAsString(ogrIndex);
+
+                case OSGeo.OGR.FieldType.OFTBinary:
+                     
+                   // WTF, the C# bindings don't have a blob retrieval until this ticket gets solved
+                  // http://trac.osgeo.org/gdal/ticket/4457#comment:2
+
+                    return null;
+
+                case OSGeo.OGR.FieldType.OFTDateTime:
+                    {
+
+                        int year, month, day, hour, minute, second, flag;
+                        feature.GetFieldAsDateTime(ogrIndex, out year, out month, out day, out hour, out minute, out second, out flag);
+
+                        DateTime date = new DateTime(year, month, day, hour, minute, second);
+                        return date;
+                    }
+                    
+                    
+                default:
+                    return feature.GetFieldAsString(ogrIndex); //most things coerce as strings
+            }
+        }
+
         #region IPlugInDatasetHelper Members
 
         public IEnvelope Bounds
@@ -144,7 +199,7 @@ namespace GDAL.OGRPlugin
         {            
             try
             {
-                OGRCursor allCursor = new OGRCursor(this, whereClause, (System.Array) fieldMap);                
+                OGRCursor allCursor = new OGRCursor(this, whereClause, (System.Array) fieldMap, null);                
                 return (IPlugInCursorHelper)allCursor;
             }
             catch (Exception ex)
@@ -152,61 +207,25 @@ namespace GDAL.OGRPlugin
                 System.Diagnostics.Debug.WriteLine(ex.Message);
                 return null;
             }
-         
         }
 
         public IPlugInCursorHelper FetchByID(int ClassIndex, int ID, object FieldMap)
         {
             return null;
-            /*
-            try
-            {
-                OGRCursor idCursor =
-                    new OGRCursor(m_fullPath, this.get_Fields(ClassIndex), ID,
-                    (System.Array)FieldMap, null, this.geometryTypeByID(ClassIndex));
-
-                setMZ(idCursor, ClassIndex);
-                return (IPlugInCursorHelper)idCursor;
-            }
-            catch (Exception ex)	//will catch NextRecord error if it reaches EOF without finding a record
-            {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
-                return null;
-            }
-             * */
         }
 
-        public IPlugInCursorHelper FetchByEnvelope(int ClassIndex, IEnvelope env, bool strictSearch, string WhereClause, object FieldMap)
+        public IPlugInCursorHelper FetchByEnvelope(int ClassIndex, IEnvelope env, bool strictSearch, string whereClause, object fieldMap)
         {
-            return null;
-            /*
-             
-            if (this.DatasetType == esriDatasetType.esriDTTable)
-                return null;
-
-            //env passed in always has same spatial reference as the data
-            //for identify, it will check if search geometry intersect dataset bound
-            //but not ITable.Search(pSpatialQueryFilter, bRecycle) etc
-            //so here we should check if input env falls within extent
-            IEnvelope boundEnv = this.Bounds;
-            boundEnv.Project(env.SpatialReference);
-            if (boundEnv.IsEmpty)
-                return null;	//or raise error?
             try
             {
-                OGRCursor spatialCursor = new OGRCursor(m_fullPath,
-                    this.get_Fields(ClassIndex), -1,
-                    (System.Array)FieldMap, env, this.geometryTypeByID(ClassIndex));
-                setMZ(spatialCursor, ClassIndex);
-
-                return (IPlugInCursorHelper)spatialCursor;
+                OGRCursor allCursor = new OGRCursor(this, whereClause, (System.Array)fieldMap, env);
+                return (IPlugInCursorHelper)allCursor;
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine(ex.Message);
                 return null;
             }
-             */ 
         }
 
         #endregion

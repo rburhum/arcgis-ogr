@@ -48,6 +48,7 @@ namespace GDAL.OGRPlugin
 
         private String m_whereClause;
         private System.Array m_esriQueryFieldMap;
+        private IEnvelope m_envelope;
 
         private OSGeo.OGR.Feature m_currentOGRFeature;
         
@@ -58,7 +59,7 @@ namespace GDAL.OGRPlugin
 
 
 
-        public OGRCursor(OGRDataset parent, String whereClause, System.Array esriQueryFieldMap)
+        public OGRCursor(OGRDataset parent, String whereClause, System.Array esriQueryFieldMap, IEnvelope env)
         {
             
             m_isFinished = false;
@@ -66,8 +67,22 @@ namespace GDAL.OGRPlugin
             
             m_whereClause = whereClause;
 
-            if (m_whereClause.Length > 0)
+            if (m_whereClause != null && m_whereClause.Length > 0)
                 m_pDataset.ogrLayer.SetAttributeFilter(m_whereClause);
+            else
+                m_pDataset.ogrLayer.SetAttributeFilter(null);
+
+            m_envelope = env;
+            if (m_envelope != null)
+            {
+                m_envelope.Project(m_pDataset.SpatialReference);
+                m_pDataset.ogrLayer.SetSpatialFilterRect(m_envelope.XMin, m_envelope.YMin, m_envelope.XMax, m_envelope.YMax);
+            }
+            else
+            {
+                m_pDataset.ogrLayer.SetSpatialFilter(null);
+            }
+
 
             m_esriQueryFieldMap = esriQueryFieldMap;
 
@@ -77,11 +92,6 @@ namespace GDAL.OGRPlugin
             m_currentOGRFeature = null;
 
             NextRecord();
-        }
-
-        private void ReadNextRow()
-        {
-            m_currentOGRFeature = m_pDataset.ogrLayer.GetNextFeature();
         }
 
         #region IPlugInCursorHelper Members
@@ -105,7 +115,8 @@ namespace GDAL.OGRPlugin
 
                     IField valField = m_pDataset.get_Fields(0).get_Field(i);
 
-                    object val = ogr_utils.get_mapped_value(m_pDataset, i);
+                    object val = m_pDataset.get_mapped_value(m_currentOGRFeature, i);
+
                     row.set_Value(i, val);                    
                 }
 
@@ -135,7 +146,7 @@ namespace GDAL.OGRPlugin
 
                 //import geometry from WKB to ESRI Shape
                 IWkb pWKB = pGeometry as IWkb;
-                pWKB.ImportFromWkb(wkbSize, wkbBuffer[0]);
+                pWKB.ImportFromWkb(wkbSize, ref wkbBuffer[0]);
 
                 pGeometry.SpatialReference = m_pDataset.SpatialReference;
 
@@ -164,7 +175,7 @@ namespace GDAL.OGRPlugin
             {
                 m_isFinished = true;
 
-                throw new COMException("End of OGR Plugin cursor", E_FAIL);             
+                throw new COMException("End of OGR Plugin cursor", S_FALSE);             
             }
 
             return;
