@@ -302,5 +302,11 @@ namespace GDAL.OGRPlugin
             }
             return true;
         }
+
+        public static object get_mapped_value(OGRDataset dataset, int esriFieldsIndex)
+        {
+            // TODO: implement ESRI field -> OGRField-> getValue() mapping
+            return null;
+        }
     }
 }

@@ -65,7 +65,7 @@ namespace GDAL.OGRPlugin
         private string GetFileName()
         {
             OpenFileDialog dlg = new OpenFileDialog();
-            //dlg.Filter = "Simple Point (*.csp)|*.csp";
+            //dlg.Filter = "Simple Point (*.sqlite)|*.sqlite";
             dlg.Title = "Open file";
             dlg.RestoreDirectory = true;
             dlg.CheckPathExists = true;

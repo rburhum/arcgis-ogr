@@ -45,10 +45,7 @@ namespace GDAL.OGRPlugin
     internal class OGRDataset : IPlugInDatasetHelper, IPlugInDatasetInfo, IPlugInFastRowCount
     {
         
-        private string m_fullPath;
-
         private OSGeo.OGR.Layer m_layer;
-
         private IFields m_fields;
         private esriDatasetType m_datasetType;
         private esriGeometryType m_geometryType;
@@ -56,7 +53,31 @@ namespace GDAL.OGRPlugin
         private int m_geometryFieldIndex;
         private int m_oidFieldIndex;
         private System.Collections.Hashtable m_fieldMapping;
-        
+
+        #region accessors for fields
+
+        public OSGeo.OGR.Layer ogrLayer
+        {
+            get { return m_layer;}
+        }
+
+        public IFields fields
+        {
+            get { return m_fields; }
+        }
+
+        public System.Collections.Hashtable fieldMapping
+        {
+            get { return m_fieldMapping; }
+        }
+
+        public ISpatialReference SpatialReference
+        {
+            get { return m_spatialReference; }
+        }
+
+        #endregion
+
 
         public OGRDataset(OSGeo.OGR.Layer layer)
         {
@@ -118,17 +139,12 @@ namespace GDAL.OGRPlugin
         }
 
 
-        #region Fetching - returns cursor //HIGHLIGHT: Fetching
-        public IPlugInCursorHelper FetchAll(int ClassIndex, string WhereClause, object FieldMap)
-        {
-            return null;
-            /*
+        #region Fetching - returns cursor
+        public IPlugInCursorHelper FetchAll(int ClassIndex, string whereClause, object fieldMap)
+        {            
             try
             {
-                OGRCursor allCursor =
-                    new OGRCursor(m_fullPath, this.get_Fields(ClassIndex), -1,
-                    (System.Array)FieldMap, null, this.geometryTypeByID(ClassIndex));
-                setMZ(allCursor, ClassIndex);
+                OGRCursor allCursor = new OGRCursor(this, whereClause, (System.Array) fieldMap);                
                 return (IPlugInCursorHelper)allCursor;
             }
             catch (Exception ex)
@@ -136,7 +152,7 @@ namespace GDAL.OGRPlugin
                 System.Diagnostics.Debug.WriteLine(ex.Message);
                 return null;
             }
-             */
+         
         }
 
         public IPlugInCursorHelper FetchByID(int ClassIndex, int ID, object FieldMap)
@@ -241,9 +257,8 @@ namespace GDAL.OGRPlugin
         public int RowCount
         {
             get 
-            {
-                return 0;
-                //return m_layer.GetFeatureCount(0); 
+            {           
+                return m_layer.GetFeatureCount(0); 
             }
         }
     }
