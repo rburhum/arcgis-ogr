@@ -51,6 +51,8 @@ namespace GDAL.OGRPlugin
         private IEnvelope m_envelope;
 
         private OSGeo.OGR.Feature m_currentOGRFeature;
+
+        private int m_onlyOneID; // when this is set, we only retrieve this one id
         
         #region HRESULT definitions
         private const int E_FAIL = unchecked((int)0x80004005);
@@ -59,7 +61,7 @@ namespace GDAL.OGRPlugin
 
 
 
-        public OGRCursor(OGRDataset parent, String whereClause, System.Array esriQueryFieldMap, IEnvelope env)
+        public OGRCursor(OGRDataset parent, String whereClause, System.Array esriQueryFieldMap, IEnvelope env = null, int onlyOneID = -1)
         {
             
             m_isFinished = false;
@@ -91,7 +93,14 @@ namespace GDAL.OGRPlugin
 
             m_currentOGRFeature = null;
 
-            NextRecord();
+            m_onlyOneID = onlyOneID;
+
+            if (m_onlyOneID == -1)
+                NextRecord();
+            else
+            {
+                RetrieveOnlyOneRecord();
+            }
         }
 
         #region IPlugInCursorHelper Members
@@ -110,14 +119,31 @@ namespace GDAL.OGRPlugin
 
                 for (int i = 0; i < count; i++)
                 {
-                    if (m_esriQueryFieldMap.GetValue(i).Equals(-1))
+                    int esriFieldIndex = (int)m_esriQueryFieldMap.GetValue(i);
+
+                    // have to skip 1) objectid and 2) geometry field or we will get an ESRI
+                    // exception. Also have to skip anything that the query map is asking to ignore
+
+                    if (esriFieldIndex == -1 || 
+                        esriFieldIndex == m_pDataset.get_OIDFieldIndex(0) ||
+                        esriFieldIndex == m_pDataset.get_ShapeFieldIndex(0))
                         continue;
 
-                    IField valField = m_pDataset.get_Fields(0).get_Field(i);
+                    try
+                    {
 
-                    object val = m_pDataset.get_mapped_value(m_currentOGRFeature, i);
+                        IField valField = m_pDataset.get_Fields(0).get_Field(i);
 
-                    row.set_Value(i, val);                    
+                        object val = m_pDataset.get_mapped_value(m_currentOGRFeature, i);
+
+                        row.set_Value(i, val);
+                    }
+                    catch (Exception ex)
+                    {
+                        // skip values that fail to be set but continue doing it anyway
+                        System.Diagnostics.Debug.WriteLine(ex.Message);
+                    }
+
                 }
 
                 return m_currentOGRFeature.GetFID();
@@ -182,6 +208,12 @@ namespace GDAL.OGRPlugin
 
         }
         #endregion
+
+        public void RetrieveOnlyOneRecord()
+        {
+            m_currentOGRFeature = m_pDataset.ogrLayer.GetFeature(m_onlyOneID);
+            m_isFinished = true;
+        }
     }
 }
         

@@ -209,9 +209,18 @@ namespace GDAL.OGRPlugin
             }
         }
 
-        public IPlugInCursorHelper FetchByID(int ClassIndex, int ID, object FieldMap)
+        public IPlugInCursorHelper FetchByID(int ClassIndex, int ID, object fieldMap)
         {
-            return null;
+            try
+            {
+                OGRCursor allCursor = new OGRCursor(this, null, (System.Array)fieldMap, null, ID);
+                return (IPlugInCursorHelper)allCursor;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+                return null;
+            }
         }
 
         public IPlugInCursorHelper FetchByEnvelope(int ClassIndex, IEnvelope env, bool strictSearch, string whereClause, object fieldMap)
