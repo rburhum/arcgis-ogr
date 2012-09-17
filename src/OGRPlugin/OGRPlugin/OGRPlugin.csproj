@@ -92,6 +92,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Desktop\gdal-1.9.1-32bit\bin\gdal\csharp\ogr_csharp.dll</HintPath>
     </Reference>
+    <Reference Include="osr_csharp, Version=1.0.4551.37148, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Desktop\gdal-1.9.1-32bit\bin\gdal\csharp\osr_csharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />

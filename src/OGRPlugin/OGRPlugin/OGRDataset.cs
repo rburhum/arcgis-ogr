@@ -52,14 +52,19 @@ namespace GDAL.OGRPlugin
         private IFields m_fields;
         private esriDatasetType m_datasetType;
         private esriGeometryType m_geometryType;
+        private ESRI.ArcGIS.Geometry.ISpatialReference m_spatialReference;
         private int m_geometryFieldIndex;
         private int m_oidFieldIndex;
+        private System.Collections.Hashtable m_fieldMapping;
+        
 
         public OGRDataset(OSGeo.OGR.Layer layer)
         {
-            m_layer = layer;
-
-            ogr_utils.map_fields(layer, out m_fields, out m_datasetType, out m_geometryType, out m_geometryFieldIndex, out m_oidFieldIndex);
+            m_layer = layer;   
+         
+            ogr_utils.map_fields(layer, out m_fieldMapping, out m_fields, out m_datasetType, 
+                                out m_geometryType, out m_geometryFieldIndex, out m_oidFieldIndex, 
+                                out m_spatialReference);
 
         }
 
@@ -75,7 +80,7 @@ namespace GDAL.OGRPlugin
                 OSGeo.OGR.Envelope ogrEnvelope = new OSGeo.OGR.Envelope();
                 m_layer.GetExtent(ogrEnvelope,0);
 
-                return ogr_utils.get_extent(ogrEnvelope);
+                return ogr_utils.get_extent(ogrEnvelope, m_spatialReference);
             }
         }
 
@@ -194,12 +199,12 @@ namespace GDAL.OGRPlugin
         #endregion
 
         #region IPlugInDatasetInfo Members
-        //HIGHLIGHT: IPlugInDatasetInfo - lightweight!
+        
         public string LocalDatasetName
         {
             get
             {
-                return "OGR Dataset";
+                return m_layer.GetName();
             }
         }
 
@@ -210,7 +215,8 @@ namespace GDAL.OGRPlugin
                 if (m_geometryFieldIndex == -1)
                     return null;
                 else
-                    return "Shape";
+                    return m_fields.get_Field(m_geometryFieldIndex).Name;
+                 
             }
         }
 
@@ -218,10 +224,7 @@ namespace GDAL.OGRPlugin
         {
             get
             {
-                if (m_geometryFieldIndex == -1)
-                    return esriDatasetType.esriDTTable;
-                else
-                    return esriDatasetType.esriDTFeatureClass;
+                return m_datasetType;                
             }
         }
 
@@ -239,7 +242,8 @@ namespace GDAL.OGRPlugin
         {
             get 
             {
-                return m_layer.GetFeatureCount(0); 
+                return 0;
+                //return m_layer.GetFeatureCount(0); 
             }
         }
     }

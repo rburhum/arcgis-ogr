@@ -95,14 +95,8 @@ namespace GDAL.OGRPlugin
 
                 //Use activator in order to create an instance of the workspace factory
                 IWorkspaceFactory workspaceFactory = Activator.CreateInstance(t) as IWorkspaceFactory;
-
-                MessageBox.Show("Opening " + path);
-                IWorkspace pWorspace = workspaceFactory.OpenFromFile(path, 0);
-
-                if (pWorspace == null)
-                    MessageBox.Show("Workspace is null");
-                else
-                    MessageBox.Show("Workspace has stuff");
+              
+                IWorkspace pWorspace = workspaceFactory.OpenFromFile(path, 0);               
                
                 return pWorspace;              
             }
