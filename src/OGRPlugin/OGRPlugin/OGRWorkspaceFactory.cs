@@ -97,8 +97,7 @@ namespace GDAL.OGRPlugin
 
         public bool CanSupportSQL
         {
-            //TODO: try switching this to true later
-            get { return false; }
+            get { return true; }
         }
 
         public string DataSourceName
