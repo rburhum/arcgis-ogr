@@ -62,7 +62,12 @@ I used <a href="http://vbkto.dyndns.org/sdk/PackageList.aspx?file=release-1600-g
   Turns out that I am using Visual Studio Express 2010 to compile and debug this thing. <a href="http://through-the-interface.typepad.com/through_the_interface/2006/07/debugging_using.html">I had to hand edit the proj and 
   the user file to allow firing up ArcMap and have Release/Debug options in my IDE</a> since those options are available on the Express editions of Visual Studio. It seems that is what the ArcGIS Visual Studio Templates also do.
   
-  
+## Known Limitations
+
+* Blob fields are not being read
+  This is a limitation with the current Swig bindings for OGR. <a href="http://trac.osgeo.org/gdal/ticket/4457">It is being worked on. See the related ticket 4457</a>
+* Workspace is readonly
+  In ArcGIS 10.2 ESRI will release a few interfaces that will allow write support to be easily implemented. Let's wait for them :)
 
 ## Contributing
 
