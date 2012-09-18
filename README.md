@@ -17,6 +17,15 @@ Some popular formats include:
 * <a href="http://www.gdal.org/ogr/drv_xls.html">Microsoft Office Excel Format</a>
 * ...and <a href="http://www.gdal.org/ogr/ogr_formats.html">much much more!</a>
 
+## Screenshots
+
+* OGR Add data dialog
+<img src="http://i.imgur.com/Tc0tp.png">
+
+* Spatialite and S57 files being read natively from ArcGIS
+<img src="http://i.imgur.com/Svzjp.png" />
+<img src="http://i.imgur.com/O2kaJ.png" />
+
 
 ## License
 BSD License. For those of you not in Open Source geekdom, it means "hella free". You can pretty much, do whatever you want with it - Commercial or not.
