@@ -67,7 +67,7 @@ I used <a href="http://vbkto.dyndns.org/sdk/PackageList.aspx?file=release-1600-g
 * Blob fields are not being read
   This is a limitation with the current Swig bindings for OGR. <a href="http://trac.osgeo.org/gdal/ticket/4457">It is being worked on. See the related ticket 4457</a>
 * Workspace is readonly
-  In ArcGIS 10.2 ESRI will release a few interfaces that will allow write support to be easily implemented. Let's wait for them :)
+  In <a href="http://downloads.esri.com/support/downloads/other_/189810.1_SP1_Announcement.pdf">ArcGIS 10.1 SP1 (October 2012)</a> ESRI will release a few interfaces that will allow write support to be easily implemented. Let's wait for them :)
 
 ## Contributing
 
