@@ -156,6 +156,12 @@ namespace GDAL.OGRPlugin
                 OSGeo.OGR.Envelope ogrEnvelope = new OSGeo.OGR.Envelope();
                 m_layer.GetExtent(ogrEnvelope,0);
 
+                if (ogrEnvelope.MinX == 0 && 
+                    ogrEnvelope.MaxX == 0 && 
+                    ogrEnvelope.MinY == 0 && 
+                    ogrEnvelope.MaxY == 0)
+                    m_layer.GetExtent(ogrEnvelope, 1);
+
                 return ogr_utils.get_extent(ogrEnvelope, m_spatialReference);
             }
         }
@@ -197,44 +203,24 @@ namespace GDAL.OGRPlugin
         #region Fetching - returns cursor
         public IPlugInCursorHelper FetchAll(int ClassIndex, string whereClause, object fieldMap)
         {            
-            try
-            {
-                OGRCursor allCursor = new OGRCursor(this, whereClause, (System.Array) fieldMap, null);                
-                return (IPlugInCursorHelper)allCursor;
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
-                return null;
-            }
+           OGRCursor allCursor = new OGRCursor(this, whereClause, (System.Array) fieldMap, null);
+
+           return (IPlugInCursorHelper)allCursor;         
         }
 
         public IPlugInCursorHelper FetchByID(int ClassIndex, int ID, object fieldMap)
         {
-            try
-            {
-                OGRCursor allCursor = new OGRCursor(this, null, (System.Array)fieldMap, null, ID);
-                return (IPlugInCursorHelper)allCursor;
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
-                return null;
-            }
+            OGRCursor allCursor = new OGRCursor(this, null, (System.Array)fieldMap, null, ID);
+            
+            return (IPlugInCursorHelper)allCursor;
+            
         }
 
         public IPlugInCursorHelper FetchByEnvelope(int ClassIndex, IEnvelope env, bool strictSearch, string whereClause, object fieldMap)
         {
-            try
-            {
-                OGRCursor allCursor = new OGRCursor(this, whereClause, (System.Array)fieldMap, env);
-                return (IPlugInCursorHelper)allCursor;
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
-                return null;
-            }
+            OGRCursor allCursor = new OGRCursor(this, whereClause, (System.Array)fieldMap, env);
+                
+            return (IPlugInCursorHelper)allCursor;
         }
 
         #endregion
