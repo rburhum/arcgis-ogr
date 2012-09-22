@@ -132,35 +132,58 @@ namespace GDAL.OGRPlugin
 
         private void OpenDataset()
         {
-            try
+
+            if (null == m_hookHelper || null == m_workspace)
+                return;
+
+            if (string.Empty == (string)lstFeatureClasses.SelectedItem)
+                return;
+
+            //get the selected item from the listbox
+            string dataset = (string)lstFeatureClasses.SelectedItem;
+
+            //cast the workspace into a feature workspace
+            IFeatureWorkspace featureWorkspace = m_workspace as IFeatureWorkspace;
+            if (null == featureWorkspace)
+                return;
+
+            //get a featureclass (or standalone table) from the workspace
+            ITable table = featureWorkspace.OpenTable(dataset) as ITable;
+
+            if (table == null)
             {
-                if (null == m_hookHelper || null == m_workspace)
-                    return;
+                System.Windows.Forms.MessageBox.Show("Failed to open " + dataset);
+                return;
+            }
 
-                if (string.Empty == (string)lstFeatureClasses.SelectedItem)
-                    return;
+            // figure out if it is a table or featureclass
 
-                //get the selected item from the listbox
-                string dataset = (string)lstFeatureClasses.SelectedItem;
+            IFeatureClass featureClass = table as IFeatureClass;
 
-                //cast the workspace into a feature workspace
-                IFeatureWorkspace featureWorkspace = m_workspace as IFeatureWorkspace;
-                if (null == featureWorkspace)
-                    return;
+            if (featureClass == null)
+            {
+                // add as table
+                
+                IStandaloneTableCollection tableCollection = m_hookHelper.FocusMap as IStandaloneTableCollection;
+                IStandaloneTable standaloneTable = new StandaloneTableClass();
+                standaloneTable.Name = ((IDataset)table).Name;
+                standaloneTable.Table = table;
+                tableCollection.AddStandaloneTable(standaloneTable);
 
-                //get a featureclass from the workspace
-                IFeatureClass featureClass = featureWorkspace.OpenFeatureClass(dataset);
+                m_hookHelper.ActiveView.ContentsChanged();
 
-                //create a new feature layer and add it to the map
+            }
+            else
+            {
+                // add as feature class
+                
                 IFeatureLayer featureLayer = new FeatureLayerClass();
                 featureLayer.Name = featureClass.AliasName;
                 featureLayer.FeatureClass = featureClass;
                 m_hookHelper.FocusMap.AddLayer((ILayer)featureLayer);
+
             }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Trace.WriteLine(ex.Message);
-            }
+            
         }
         #endregion
     }

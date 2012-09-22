@@ -157,8 +157,9 @@ namespace GDAL.OGRPlugin
         public override void OnClick()
         {
             try
-            {
+            {           
                 OSGeo.OGR.Ogr.RegisterAll();
+
                 OGRAddLayerDialog dlg = new OGRAddLayerDialog(m_hookHelper);
                 dlg.Show();
             }
