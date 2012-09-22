@@ -40,6 +40,7 @@ Sorry, not available yet but come back very soon :)
 * My spatialite is added to ArcMap as a standlone (i.e non-spatial table)
   Make sure your sqlite files are spatialite files. For this, there needs to be some <a href="http://www.gaia-gis.it/gaia-sins/spatialite-cookbook/html/metadata.html">metadata tables</a>. Don't add them manually though. Use the <a href="http://www.gaia-gis.it/gaia-sins/spatialite-manual-2.3.1.html">init_spatialite.sql file</a> instead. 
   Once you are done with this, the last thing to do is to make sure that the tables are registered with the geometry_columns table. If you are using the <a href="http://www.gaia-gis.it/spatialite-2.3.1/binaries.html">Spatialite GUI</a>, this is as easy as right clicking on the geometry column and chooseing the *Recover Geometry* option. If you are doing it through the command prompt, you will find that the <a href="http://www.gaia-gis.it/spatialite-2.3.1/spatialite-tutorial-2.3.1.html">RecoverGeometryColumn</a> is what you are looking for.
+  Remember that ArcGIS only knows about FeatureClasses with *specific* geometry types (i.e POINT, MULTIPOINT, POLYGON, etc) and doesn't know how to interpret generic "GEOMETRY" declarations. In short, make sure that the entry in the geometry_columns specifies a specific geometry type if you want it to be added as a FeatureLayer in ArcMap.
 
 ## Developer Information
 
