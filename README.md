@@ -32,7 +32,7 @@ BSD License. For those of you not in Open Source geekdom, it means "hella free".
 We ask that you please contribute any modifications back if you are kind enough to make modifications, but you are not forced to.
 
 ## Download / Ready to use Binaries
-Sorry, not available yet but come back very soon :)
+ <a href="https://dl.dropbox.com/u/4779803/gdal-ogrplugin/ogr_plugin_release_v0.3.zip">You can find experimental binaries here.</a> I have not *yet* created an installer, so please try these out and let me know how it works for you.
 
 ## User Information (for Developer information see below)
 
