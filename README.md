@@ -32,8 +32,16 @@ BSD License. For those of you not in Open Source geekdom, it means "hella free".
 We ask that you please contribute any modifications back if you are kind enough to make modifications, but you are not forced to.
 
 ## Download / Ready to use Binaries
-Sorry, not available yet but come back very soon :)
+ <a href="https://dl.dropbox.com/u/4779803/gdal-ogrplugin/ogr_plugin_release_v0.3.zip">You can find experimental binaries here.</a> I have not *yet* created an installer, so please try these out and let me know how it works for you.
 
+## User Information (for Developer information see below)
+
+### User FAQ
+* **My spatialite is added to ArcMap as a standlone (i.e non-spatial table)**
+
+  Make sure your sqlite files are spatialite files. For this, there needs to be some <a href="http://www.gaia-gis.it/gaia-sins/spatialite-cookbook/html/metadata.html">metadata tables</a>. Don't add them manually though. Use the <a href="http://www.gaia-gis.it/gaia-sins/spatialite-manual-2.3.1.html">init_spatialite.sql file</a> instead. 
+  Once you are done with this, the last thing to do is to make sure that the tables are registered with the geometry_columns table. If you are using the <a href="http://www.gaia-gis.it/spatialite-2.3.1/binaries.html">Spatialite GUI</a>, this is as easy as right clicking on the geometry column and chooseing the *Recover Geometry* option. If you are doing it through the command prompt, you will find that the <a href="http://www.gaia-gis.it/spatialite-2.3.1/spatialite-tutorial-2.3.1.html">RecoverGeometryColumn</a> is what you are looking for.
+  Remember that ArcGIS only knows about FeatureClasses with *specific* geometry types (i.e POINT, MULTIPOINT, POLYGON, etc) and doesn't know how to interpret generic "GEOMETRY" declarations. In short, make sure that the entry in the geometry_columns specifies a specific geometry type if you want it to be added as a FeatureLayer in ArcMap.
 
 ## Developer Information
 
@@ -44,29 +52,35 @@ which I used to write the initial version of this Plugin. **Remember that you ne
 I used <a href="http://vbkto.dyndns.org/sdk/PackageList.aspx?file=release-1600-gdal-1-9-1-mapserver-6-0-3.zip">release-1600-gdal-1-9-1-mapserver-6-0-3.zip</a>. By the time you read this, a much newer version must exist.
 
 ### Developer FAQ
-* My dll gets loaded but my breakpoints are not being hit. Help?
+* **My dll gets loaded but my breakpoints are not being hit. Help?**
+
   Ah yes, I ran into this problem, too. Turns out that if you compile against the 4.0.NET Runtime, you will need to make a slight change to the ArcMap.exe.config file that is shipped with ArcGIS. <a href="http://resources.arcgis.com/en/help/arcobjects-net/conceptualhelp/index.html#/How_to_debug_add_ins/0001000002vs000000/">This little detail
   is described in their documentation.</a> After changing the supportedRuntime section, your breakpoints will be hit.
   
-* Why is this implemented as a WorkspacePlugin? Doesn't it give you read support only?
+* **Why is this implemented as a WorkspacePlugin? Doesn't it give you read support only?**
+
   I started writing everything on C++ implementing every single COM interface that the GeoDatabase uses so that I would fool ArcMap/ArcCatalog into
   thinking I was a full-blown GeoDatabase. I had it somewhat working, but there was always some interface that I had missed (and was not documented properly).
   After hearing directly from the source, that in the next ArcGIS release, WorkspacePlugin's will have write support, I thrashed the other project that was taking
   weeks to this which only took two days. I don't regret it a bit.
 
-* Does this run on ArcGIS Engine? Or Does it need Desktop?
+* **Does this run on ArcGIS Engine? Or Does it need Desktop?**
+
   Both the ICommands and the WorkspacePlugin code live in the same assembly, so ArcGIS Desktop is required (ArcView / Basic / or whatever the cheapest license is called now should work). 
   There is nothing that is stopping you from separating the commands out and it should be very easy to do. I did not because I did not have an ArcGIS Engine license to test it so why do the work?
   
-* Why did you check-in the <a href="https://github.com/RBURHUM/arcgis-ogr/blob/master/src/OGRPlugin/OGRPlugin/OGRPlugin.csproj.user">.csproj.user</a> file you nimrod!?!? Don't you know you are supposed to leave those out?
+* **Why did you check-in the <a href="https://github.com/RBURHUM/arcgis-ogr/blob/master/src/OGRPlugin/OGRPlugin/OGRPlugin.csproj.user">.csproj.user</a> file you nimrod!?!? Don't you know you are supposed to leave those out?**
+
   Turns out that I am using Visual Studio Express 2010 to compile and debug this thing. <a href="http://through-the-interface.typepad.com/through_the_interface/2006/07/debugging_using.html">I had to hand edit the proj and 
   the user file to allow firing up ArcMap and have Release/Debug options in my IDE</a> since those options are available on the Express editions of Visual Studio. It seems that is what the ArcGIS Visual Studio Templates also do.
   
 ## Known Limitations
 
-* Blob fields are not being read
+* **Blob fields are not being read**
+
   This is a limitation with the current Swig bindings for OGR. <a href="http://trac.osgeo.org/gdal/ticket/4457">It is being worked on. See the related ticket 4457</a>
-* Workspace is readonly
+* **Workspace is readonly**
+
   In <a href="http://downloads.esri.com/support/downloads/other_/189810.1_SP1_Announcement.pdf">ArcGIS 10.1 SP1 (October 2012)</a> ESRI will release a few interfaces that will allow write support to be easily implemented. Let's wait for them :)
 
 ## Contributing
