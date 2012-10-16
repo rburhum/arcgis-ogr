@@ -32,7 +32,15 @@ BSD License. For those of you not in Open Source geekdom, it means "hella free".
 We ask that you please contribute any modifications back if you are kind enough to make modifications, but you are not forced to.
 
 ## Download / Ready to use Binaries
- <a href="https://dl.dropbox.com/u/4779803/gdal-ogrplugin/ogr_plugin_release_v0.3.zip">You can find experimental binaries here.</a> I have not *yet* created an installer, so please try these out and let me know how it works for you.
+ <a href="https://dl.dropbox.com/u/4779803/gdal-ogrplugin/ogr_plugin_release_v0.4.zip">You can find experimental binaries here.</a> They are known to work on ArcGIS 10.1.
+
+To use them: 
+* Download and unzip file to any folder on your system.
+* In ArcMap: Click on Customize->Toolbars->Customize...
+* Click on "Add From File"
+* Choose OGRPlugin.tlb
+* If succesful you will see a new "Add OGR Layer" command that was added. Drag it to a toolbar...
+* Enjoy.
 
 ## User Information (for Developer information see below)
 
