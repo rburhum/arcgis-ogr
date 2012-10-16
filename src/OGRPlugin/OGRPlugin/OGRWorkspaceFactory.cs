@@ -69,6 +69,7 @@ namespace GDAL.OGRPlugin
         #region class constructor
         public OGRWorkspaceFactory()
         {
+            System.Environment.SetEnvironmentVariable("GDAL_DATA", System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\gdal-data");
         }
         #endregion
 
