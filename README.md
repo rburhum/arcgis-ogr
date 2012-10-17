@@ -32,6 +32,7 @@ BSD License. For those of you not in Open Source geekdom, it means "hella free".
 We ask that you please contribute any modifications back if you are kind enough to make modifications, but you are not forced to.
 
 ## Download / Ready to use Binaries
+  OK, these have some COM registration issues (if you compile it in your machine it will work fine). Will post some COM registration files to fix the issue.
  <a href="https://dl.dropbox.com/u/4779803/gdal-ogrplugin/ogr_plugin_release_v0.4.zip">You can find experimental binaries here.</a> They are known to work on ArcGIS 10.1.
 
 To use them: 
