@@ -13,6 +13,7 @@ using ESRI.ArcGIS.Geodatabase;
 
 namespace GDAL.OGRPlugin
 {
+	[System.Runtime.InteropServices.ComVisible(false)]
     public partial class OGRAddLayerDialog : Form
     {
         #region class members
