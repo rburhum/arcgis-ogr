@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <PublishUrlHistory />
@@ -11,11 +11,14 @@
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-      <StartAction>Program</StartAction>
-      <StartProgram>C:\Program Files (x86)\ArcGIS\Desktop10.1\bin\ArcMap.exe</StartProgram>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-      <StartAction>Program</StartAction>
-      <StartProgram>C:\Program Files (x86)\ArcGIS\Desktop10.1\bin\ArcMap.exe</StartProgram>
-   </PropertyGroup>
+    <StartAction>Program</StartAction>
+    <StartProgram>C:\Program Files (x86)\ArcGIS\Desktop10.1\bin\ArcMap.exe</StartProgram>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <StartAction>Program</StartAction>
+    <StartProgram>C:\Program Files (x86)\ArcGIS\Desktop10.1\bin\ArcMap.exe</StartProgram>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ReferencePath>C:\Users\dani3589\Documents\GitHub\arcgis-ogr\src\OGRPlugin\OGRPlugin\lib\gdal-csharp\</ReferencePath>
+  </PropertyGroup>
 </Project>
