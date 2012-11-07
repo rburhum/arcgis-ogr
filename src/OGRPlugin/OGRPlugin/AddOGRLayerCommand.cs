@@ -29,6 +29,8 @@
 
 using System;
 using System.Drawing;
+using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using ESRI.ArcGIS.ADF.BaseClasses;
 using ESRI.ArcGIS.ADF.CATIDs;
@@ -113,8 +115,8 @@ namespace GDAL.OGRPlugin
 
             try
             {
-                string bitmapResourceName = GetType().Name + ".bmp";
-                base.m_bitmap = new Bitmap(GetType(), bitmapResourceName);
+                Stream bitmapStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("OGRDatasource.AddOGRLayerCommand.bmp");
+                base.m_bitmap = new Bitmap(bitmapStream);
             }
             catch (Exception ex)
             {
