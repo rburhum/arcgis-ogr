@@ -159,8 +159,15 @@ namespace GDAL.OGRPlugin
         public bool IsWorkspace(string wksString)
         {
             OSGeo.OGR.DataSource ds = null;
-            ds = OSGeo.OGR.Ogr.OpenShared(wksString, 0);
 
+            try
+            {
+                ds = OSGeo.OGR.Ogr.OpenShared(wksString, 0);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message);
+            }
             if (ds != null)
                 return true;
             else

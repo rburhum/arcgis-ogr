@@ -44,17 +44,25 @@ namespace GDAL.OGRPlugin
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnOpenDataSource = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupFromFile = new System.Windows.Forms.GroupBox();
             this.lblDatasets = new System.Windows.Forms.Label();
             this.lstFeatureClasses = new System.Windows.Forms.ListBox();
             this.txtPath = new System.Windows.Forms.TextBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.groupBox1.SuspendLayout();
+            this.radioFromFile = new System.Windows.Forms.RadioButton();
+            this.radioFromConnstring = new System.Windows.Forms.RadioButton();
+            this.groupFromConnString = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnConnect = new System.Windows.Forms.Button();
+            this.txtConnString = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.groupFromFile.SuspendLayout();
+            this.groupFromConnString.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(195, 276);
+            this.btnCancel.Location = new System.Drawing.Point(122, 481);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 0;
@@ -64,7 +72,7 @@ namespace GDAL.OGRPlugin
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(37, 276);
+            this.btnOK.Location = new System.Drawing.Point(21, 481);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 1;
@@ -74,30 +82,30 @@ namespace GDAL.OGRPlugin
             // 
             // btnOpenDataSource
             // 
-            this.btnOpenDataSource.Location = new System.Drawing.Point(249, 17);
+            this.btnOpenDataSource.Location = new System.Drawing.Point(454, 28);
             this.btnOpenDataSource.Name = "btnOpenDataSource";
-            this.btnOpenDataSource.Size = new System.Drawing.Size(23, 23);
+            this.btnOpenDataSource.Size = new System.Drawing.Size(65, 23);
             this.btnOpenDataSource.TabIndex = 2;
-            this.toolTip1.SetToolTip(this.btnOpenDataSource, "Open Simple Point data");
+            this.btnOpenDataSource.Text = "Browse";
+            this.toolTip1.SetToolTip(this.btnOpenDataSource, "Open File");
             this.btnOpenDataSource.UseVisualStyleBackColor = true;
             this.btnOpenDataSource.Click += new System.EventHandler(this.btnOpenDataSource_Click);
             // 
-            // groupBox1
+            // groupFromFile
             // 
-            this.groupBox1.Controls.Add(this.lblDatasets);
-            this.groupBox1.Controls.Add(this.lstFeatureClasses);
-            this.groupBox1.Controls.Add(this.txtPath);
-            this.groupBox1.Controls.Add(this.btnOpenDataSource);
-            this.groupBox1.Location = new System.Drawing.Point(12, 12);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(280, 249);
-            this.groupBox1.TabIndex = 3;
-            this.groupBox1.TabStop = false;
+            this.groupFromFile.Controls.Add(this.lblDatasets);
+            this.groupFromFile.Controls.Add(this.txtPath);
+            this.groupFromFile.Controls.Add(this.btnOpenDataSource);
+            this.groupFromFile.Location = new System.Drawing.Point(21, 51);
+            this.groupFromFile.Name = "groupFromFile";
+            this.groupFromFile.Size = new System.Drawing.Size(538, 74);
+            this.groupFromFile.TabIndex = 3;
+            this.groupFromFile.TabStop = false;
             // 
             // lblDatasets
             // 
             this.lblDatasets.AutoSize = true;
-            this.lblDatasets.Location = new System.Drawing.Point(6, 50);
+            this.lblDatasets.Location = new System.Drawing.Point(3, 272);
             this.lblDatasets.Name = "lblDatasets";
             this.lblDatasets.Size = new System.Drawing.Size(52, 13);
             this.lblDatasets.TabIndex = 5;
@@ -106,36 +114,117 @@ namespace GDAL.OGRPlugin
             // lstFeatureClasses
             // 
             this.lstFeatureClasses.FormattingEnabled = true;
-            this.lstFeatureClasses.Location = new System.Drawing.Point(6, 80);
+            this.lstFeatureClasses.Location = new System.Drawing.Point(12, 284);
             this.lstFeatureClasses.Name = "lstFeatureClasses";
-            this.lstFeatureClasses.Size = new System.Drawing.Size(266, 160);
+            this.lstFeatureClasses.Size = new System.Drawing.Size(547, 173);
             this.lstFeatureClasses.TabIndex = 4;
             this.lstFeatureClasses.DoubleClick += new System.EventHandler(this.lstDeatureClasses_DoubleClick);
             // 
             // txtPath
             // 
-            this.txtPath.Location = new System.Drawing.Point(6, 19);
+            this.txtPath.Location = new System.Drawing.Point(15, 28);
             this.txtPath.Name = "txtPath";
             this.txtPath.ReadOnly = true;
-            this.txtPath.Size = new System.Drawing.Size(237, 20);
+            this.txtPath.Size = new System.Drawing.Size(433, 20);
             this.txtPath.TabIndex = 3;
+            // 
+            // radioFromFile
+            // 
+            this.radioFromFile.AutoSize = true;
+            this.radioFromFile.Checked = true;
+            this.radioFromFile.Location = new System.Drawing.Point(12, 28);
+            this.radioFromFile.Name = "radioFromFile";
+            this.radioFromFile.Size = new System.Drawing.Size(110, 17);
+            this.radioFromFile.TabIndex = 6;
+            this.radioFromFile.TabStop = true;
+            this.radioFromFile.Text = "Add data from file:";
+            this.radioFromFile.UseVisualStyleBackColor = true;
+            this.radioFromFile.CheckedChanged += new System.EventHandler(this.radioFromFile_CheckedChanged);
+            // 
+            // radioFromConnstring
+            // 
+            this.radioFromConnstring.AutoSize = true;
+            this.radioFromConnstring.Location = new System.Drawing.Point(12, 158);
+            this.radioFromConnstring.Name = "radioFromConnstring";
+            this.radioFromConnstring.Size = new System.Drawing.Size(205, 17);
+            this.radioFromConnstring.TabIndex = 7;
+            this.radioFromConnstring.Text = "Add data from OGR connection string:";
+            this.radioFromConnstring.UseVisualStyleBackColor = true;
+            this.radioFromConnstring.CheckedChanged += new System.EventHandler(this.radioFromConnstring_CheckedChanged);
+            // 
+            // groupFromConnString
+            // 
+            this.groupFromConnString.Controls.Add(this.label2);
+            this.groupFromConnString.Controls.Add(this.txtConnString);
+            this.groupFromConnString.Controls.Add(this.label1);
+            this.groupFromConnString.Controls.Add(this.btnConnect);
+            this.groupFromConnString.Location = new System.Drawing.Point(21, 181);
+            this.groupFromConnString.Name = "groupFromConnString";
+            this.groupFromConnString.Size = new System.Drawing.Size(538, 85);
+            this.groupFromConnString.TabIndex = 6;
+            this.groupFromConnString.TabStop = false;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 272);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(52, 13);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Datasets:";
+            // 
+            // btnConnect
+            // 
+            this.btnConnect.Enabled = false;
+            this.btnConnect.Location = new System.Drawing.Point(454, 24);
+            this.btnConnect.Name = "btnConnect";
+            this.btnConnect.Size = new System.Drawing.Size(65, 27);
+            this.btnConnect.TabIndex = 2;
+            this.btnConnect.Text = "Connect";
+            this.toolTip1.SetToolTip(this.btnConnect, "Open Simple Point data");
+            this.btnConnect.UseVisualStyleBackColor = true;
+            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
+            // 
+            // txtConnString
+            // 
+            this.txtConnString.Location = new System.Drawing.Point(15, 28);
+            this.txtConnString.Name = "txtConnString";
+            this.txtConnString.Size = new System.Drawing.Size(433, 20);
+            this.txtConnString.TabIndex = 6;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Enabled = false;
+            this.label2.Location = new System.Drawing.Point(15, 58);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(428, 13);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "Example:  PG:dbname=mypostgisdb user=postgres password=mypassword host=myserver";
             // 
             // OGRAddLayerDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(304, 312);
-            this.Controls.Add(this.groupBox1);
+            this.ClientSize = new System.Drawing.Size(579, 529);
+            this.Controls.Add(this.groupFromConnString);
+            this.Controls.Add(this.radioFromFile);
+            this.Controls.Add(this.radioFromConnstring);
+            this.Controls.Add(this.groupFromFile);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.btnCancel);
+            this.Controls.Add(this.lstFeatureClasses);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "OGRAddLayerDialog";
             this.ShowInTaskbar = false;
-            this.Text = "Add OGR Layer";
+            this.Text = "AmigoCloud: Add OGR Layer";
             this.TopMost = true;
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.groupFromFile.ResumeLayout(false);
+            this.groupFromFile.PerformLayout();
+            this.groupFromConnString.ResumeLayout(false);
+            this.groupFromConnString.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -144,10 +233,17 @@ namespace GDAL.OGRPlugin
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button btnOpenDataSource;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupFromFile;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.TextBox txtPath;
         private System.Windows.Forms.ListBox lstFeatureClasses;
         private System.Windows.Forms.Label lblDatasets;
+        private System.Windows.Forms.RadioButton radioFromFile;
+        private System.Windows.Forms.RadioButton radioFromConnstring;
+        private System.Windows.Forms.GroupBox groupFromConnString;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button btnConnect;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox txtConnString;
     }
 }

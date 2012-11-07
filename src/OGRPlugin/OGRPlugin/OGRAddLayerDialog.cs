@@ -36,8 +36,28 @@ namespace GDAL.OGRPlugin
         #region UI event handlers
         private void btnOpenDataSource_Click(object sender, EventArgs e)
         {
-           
-            m_workspace = OpenPlugInWorkspace();
+            resetWorkspace();
+
+            string path = GetFileName();
+            if (string.Empty == path)
+                return;
+
+            //update the path textbox
+            txtPath.Text = path;
+
+            m_workspace = OpenPlugInWorkspace(path);
+
+            ListFeatureClasses();
+        }
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            resetWorkspace();
+
+            if (txtConnString.Text == string.Empty)
+                return;
+
+            m_workspace = OpenPlugInWorkspace(txtConnString.Text);
 
             ListFeatureClasses();
         }
@@ -66,7 +86,7 @@ namespace GDAL.OGRPlugin
         private string GetFileName()
         {
             OpenFileDialog dlg = new OpenFileDialog();
-            //dlg.Filter = "Simple Point (*.sqlite)|*.sqlite";
+            
             dlg.Title = "Open file";
             dlg.RestoreDirectory = true;
             dlg.CheckPathExists = true;
@@ -80,30 +100,24 @@ namespace GDAL.OGRPlugin
             return string.Empty;
         }
 
-        private IWorkspace OpenPlugInWorkspace()
+        private IWorkspace OpenPlugInWorkspace(string connString)
         {
             try
             {
-                string path = GetFileName();
-                if (string.Empty == path)
-                    return null;
-
-                //update the path textbox
-                txtPath.Text = path;
-
                 //get the type using the ProgID
                 Type t = Type.GetTypeFromProgID("esriGeoDatabase.OGRPluginWorkspaceFactory");
 
                 //Use activator in order to create an instance of the workspace factory
                 IWorkspaceFactory workspaceFactory = Activator.CreateInstance(t) as IWorkspaceFactory;
               
-                IWorkspace pWorspace = workspaceFactory.OpenFromFile(path, 0);               
+                IWorkspace pWorspace = workspaceFactory.OpenFromFile(connString, 0);               
                
                 return pWorspace;              
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.WriteLine(ex.Message);
+                System.Windows.Forms.MessageBox.Show(ex.Message);
+                
                 return null;
             }
         }
@@ -187,5 +201,48 @@ namespace GDAL.OGRPlugin
             
         }
         #endregion
+
+        private void resetWorkspace()
+        {
+            m_workspace = null;
+            lstFeatureClasses.Items.Clear();
+            txtPath.Text = "";
+
+            if (radioFromConnstring.Checked != true) //leave it alone if it is checked
+                txtConnString.Text = "";
+        }
+
+        private void toggleChildControlState(System.Windows.Forms.GroupBox groupBox, bool newState)
+        {
+            foreach (Control subControl in groupBox.Controls)
+                subControl.Enabled = newState;
+        }
+
+        private void ToggleRadioButtons()
+        {
+            resetWorkspace();
+
+            if (radioFromFile.Checked == true)
+            {
+                toggleChildControlState(groupFromConnString, false);
+                toggleChildControlState(groupFromFile, true);
+            }
+            else
+            {
+                toggleChildControlState(groupFromConnString, true);
+                toggleChildControlState(groupFromFile, false);
+            }
+        }
+
+        private void radioFromConnstring_CheckedChanged(object sender, EventArgs e)
+        {
+            ToggleRadioButtons();
+        }
+
+        private void radioFromFile_CheckedChanged(object sender, EventArgs e)
+        {
+            ToggleRadioButtons();
+        }
+
     }
 }
