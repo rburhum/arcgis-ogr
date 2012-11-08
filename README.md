@@ -34,16 +34,9 @@ Some popular formats include:
 BSD License. For those of you not in Open Source geekdom, it means "hella free". You can pretty much, do whatever you want with it - Commercial or not.
 We ask that you please contribute any modifications back if you are kind enough to make modifications, but you are not forced to.
 
-## Download / Ready to use Binaries
- <a href="https://dl.dropbox.com/u/4779803/gdal-ogrplugin/amigocloud_ogr_plugin_v0.5.zip">You can find experimental binaries (v0.5) here.</a> They are known to work on ArcGIS 10.1 SP1. For other versions you may have to compile the binaries yourself (they *may* work, although I have not tested them).
+## Download / Ready to use Installer (for ArcGIS 10.1SP1)
+ <a href="https://dl.dropbox.com/u/4779803/gdal-ogrplugin/setup.exe">You can find an experimental installer (v0.5) here.</a> They are known to work on ArcGIS 10.1 SP1. For other versions you may have to compile the binaries yourself (they *may* work, although I have not tested them).
 
-To use them: 
-* Download and unzip file to any folder on your system.
-* Register the OGRPlugin.dll by with the ESRIRegASM tool:
-
-                "C:\Program Files (x86)\Common Files\ArcGIS\bin\ESRIRegASM "OGRPlugin.dll"
-
- Note it's not the typelib. This will add all registry entries. When the ESRI Reg Asm UI pops up select "Desktop"
 * Run ArcMap and go to Categories, the command should appear there (search for OGR)
 * If succesful you will see a new "Add OGR Layer" command that was added. Drag it to a toolbar...
 
