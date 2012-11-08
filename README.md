@@ -20,11 +20,14 @@ Some popular formats include:
 ## Screenshots
 
 * OGR Add data dialog
-<img src="http://i.imgur.com/Tc0tp.png">
+<img src="http://i.imgur.com/koMrc.png">
 
 * Spatialite and S57 files being read natively from ArcGIS
 <img src="http://i.imgur.com/Svzjp.png" />
 <img src="http://i.imgur.com/O2kaJ.png" />
+
+* PostGIS (read FAQ below of *why* you would do this instead of the built-in ArcGIS version)
+<img src="http://i.imgur.com/koMrc.png" />
 
 
 ## License
@@ -32,7 +35,7 @@ BSD License. For those of you not in Open Source geekdom, it means "hella free".
 We ask that you please contribute any modifications back if you are kind enough to make modifications, but you are not forced to.
 
 ## Download / Ready to use Binaries
- <a href="https://dl.dropbox.com/u/4779803/gdal-ogrplugin/ogr_plugin_release_v0.4.zip">You can find experimental binaries here.</a> They are known to work on ArcGIS 10.1.
+ <a href="https://dl.dropbox.com/u/4779803/gdal-ogrplugin/amigocloud_ogr_plugin_v0.5.zip">You can find experimental binaries (v0.5) here.</a> They are known to work on ArcGIS 10.1.
 
 To use them: 
 * Download and unzip file to any folder on your system.
@@ -53,6 +56,9 @@ To use them:
   Make sure your sqlite files are spatialite files. For this, there needs to be some <a href="http://www.gaia-gis.it/gaia-sins/spatialite-cookbook/html/metadata.html">metadata tables</a>. Don't add them manually though. Use the <a href="http://www.gaia-gis.it/gaia-sins/spatialite-manual-2.3.1.html">init_spatialite.sql file</a> instead. 
   Once you are done with this, the last thing to do is to make sure that the tables are registered with the geometry_columns table. If you are using the <a href="http://www.gaia-gis.it/spatialite-2.3.1/binaries.html">Spatialite GUI</a>, this is as easy as right clicking on the geometry column and chooseing the *Recover Geometry* option. If you are doing it through the command prompt, you will find that the <a href="http://www.gaia-gis.it/spatialite-2.3.1/spatialite-tutorial-2.3.1.html">RecoverGeometryColumn</a> is what you are looking for.
   Remember that ArcGIS only knows about FeatureClasses with *specific* geometry types (i.e POINT, MULTIPOINT, POLYGON, etc) and doesn't know how to interpret generic "GEOMETRY" declarations. In short, make sure that the entry in the geometry_columns specifies a specific geometry type if you want it to be added as a FeatureLayer in ArcMap.
+
+* **Why would I connect with this to PostGIS if ArcGIS already supports PostGIS?**
+  Well, you don't *have to*, but there are some clear advantages. The <a href="http://www.gdal.org/ogr/drv_pg.html">GDAL PostGIS driver</a> is updated quite often to take advantage of the new features of PostGIS. This way, you don't have to be stuck in a particular version of PostGIS to maintain ArcGIS compatibility.
 
 ## Developer Information
 
