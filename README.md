@@ -26,8 +26,8 @@ Some popular formats include:
 <img src="http://i.imgur.com/Svzjp.png" />
 <img src="http://i.imgur.com/O2kaJ.png" />
 
-* PostGIS (read FAQ below of *why* you would do this instead of the built-in ArcGIS version)
-<img src="http://i.imgur.com/koMrc.png" />
+* PostGIS (read FAQ below of *why* you may want to opt to do this as an alternative to ArcGIS Query Layers).
+<img src="http://i.imgur.com/9B6ra.png" />
 
 
 ## License
