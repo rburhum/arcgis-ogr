@@ -270,9 +270,9 @@ namespace GDAL.OGRPlugin
 
         public int RowCount
         {
-            get 
-            {           
-                return m_layer.GetFeatureCount(0); 
+            get
+            {
+                return m_layer.GetFeatureCount(0);                
             }
         }
     }

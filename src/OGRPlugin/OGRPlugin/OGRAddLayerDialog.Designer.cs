@@ -46,16 +46,16 @@ namespace GDAL.OGRPlugin
             this.btnOpenDataSource = new System.Windows.Forms.Button();
             this.groupFromFile = new System.Windows.Forms.GroupBox();
             this.lblDatasets = new System.Windows.Forms.Label();
-            this.lstFeatureClasses = new System.Windows.Forms.ListBox();
             this.txtPath = new System.Windows.Forms.TextBox();
+            this.lstFeatureClasses = new System.Windows.Forms.ListBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.btnConnect = new System.Windows.Forms.Button();
             this.radioFromFile = new System.Windows.Forms.RadioButton();
             this.radioFromConnstring = new System.Windows.Forms.RadioButton();
             this.groupFromConnString = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btnConnect = new System.Windows.Forms.Button();
-            this.txtConnString = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.txtConnString = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.groupFromFile.SuspendLayout();
             this.groupFromConnString.SuspendLayout();
             this.SuspendLayout();
@@ -111,15 +111,6 @@ namespace GDAL.OGRPlugin
             this.lblDatasets.TabIndex = 5;
             this.lblDatasets.Text = "Datasets:";
             // 
-            // lstFeatureClasses
-            // 
-            this.lstFeatureClasses.FormattingEnabled = true;
-            this.lstFeatureClasses.Location = new System.Drawing.Point(12, 284);
-            this.lstFeatureClasses.Name = "lstFeatureClasses";
-            this.lstFeatureClasses.Size = new System.Drawing.Size(547, 173);
-            this.lstFeatureClasses.TabIndex = 4;
-            this.lstFeatureClasses.DoubleClick += new System.EventHandler(this.lstDeatureClasses_DoubleClick);
-            // 
             // txtPath
             // 
             this.txtPath.Location = new System.Drawing.Point(15, 28);
@@ -127,6 +118,28 @@ namespace GDAL.OGRPlugin
             this.txtPath.ReadOnly = true;
             this.txtPath.Size = new System.Drawing.Size(433, 20);
             this.txtPath.TabIndex = 3;
+            // 
+            // lstFeatureClasses
+            // 
+            this.lstFeatureClasses.FormattingEnabled = true;
+            this.lstFeatureClasses.Location = new System.Drawing.Point(12, 284);
+            this.lstFeatureClasses.Name = "lstFeatureClasses";
+            this.lstFeatureClasses.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.lstFeatureClasses.Size = new System.Drawing.Size(547, 173);
+            this.lstFeatureClasses.TabIndex = 4;
+            this.lstFeatureClasses.DoubleClick += new System.EventHandler(this.lstDeatureClasses_DoubleClick);
+            // 
+            // btnConnect
+            // 
+            this.btnConnect.Enabled = false;
+            this.btnConnect.Location = new System.Drawing.Point(454, 24);
+            this.btnConnect.Name = "btnConnect";
+            this.btnConnect.Size = new System.Drawing.Size(65, 27);
+            this.btnConnect.TabIndex = 2;
+            this.btnConnect.Text = "Connect";
+            this.toolTip1.SetToolTip(this.btnConnect, "Open Simple Point data");
+            this.btnConnect.UseVisualStyleBackColor = true;
+            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
             // radioFromFile
             // 
@@ -164,34 +177,6 @@ namespace GDAL.OGRPlugin
             this.groupFromConnString.TabIndex = 6;
             this.groupFromConnString.TabStop = false;
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 272);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(52, 13);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "Datasets:";
-            // 
-            // btnConnect
-            // 
-            this.btnConnect.Enabled = false;
-            this.btnConnect.Location = new System.Drawing.Point(454, 24);
-            this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(65, 27);
-            this.btnConnect.TabIndex = 2;
-            this.btnConnect.Text = "Connect";
-            this.toolTip1.SetToolTip(this.btnConnect, "Open Simple Point data");
-            this.btnConnect.UseVisualStyleBackColor = true;
-            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
-            // 
-            // txtConnString
-            // 
-            this.txtConnString.Location = new System.Drawing.Point(15, 28);
-            this.txtConnString.Name = "txtConnString";
-            this.txtConnString.Size = new System.Drawing.Size(433, 20);
-            this.txtConnString.TabIndex = 6;
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -201,6 +186,22 @@ namespace GDAL.OGRPlugin
             this.label2.Size = new System.Drawing.Size(428, 13);
             this.label2.TabIndex = 7;
             this.label2.Text = "Example:  PG:dbname=mypostgisdb user=postgres password=mypassword host=myserver";
+            // 
+            // txtConnString
+            // 
+            this.txtConnString.Location = new System.Drawing.Point(15, 28);
+            this.txtConnString.Name = "txtConnString";
+            this.txtConnString.Size = new System.Drawing.Size(433, 20);
+            this.txtConnString.TabIndex = 6;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 272);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(52, 13);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Datasets:";
             // 
             // OGRAddLayerDialog
             // 
