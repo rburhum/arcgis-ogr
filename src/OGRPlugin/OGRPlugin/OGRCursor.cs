@@ -165,6 +165,11 @@ namespace GDAL.OGRPlugin
             {
                 OSGeo.OGR.Geometry ogrGeometry = m_currentOGRFeature.GetGeometryRef();
 
+                // It seems that the IWkb.ImportFromWkb called below has trouble with Z values.
+                // Will need to investigate this further, but as a quick fix, we flatten
+                // the geometry prior to conversion.
+                ogrGeometry.FlattenTo2D();
+
                 //export geometry from OGR to WKB
                 int wkbSize = ogrGeometry.WkbSize();
                 byte[] wkbBuffer = new byte[wkbSize];
