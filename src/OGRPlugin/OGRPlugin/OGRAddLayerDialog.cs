@@ -154,50 +154,59 @@ namespace GDAL.OGRPlugin
             if (string.Empty == (string)lstFeatureClasses.SelectedItem)
                 return;
 
-            //get the selected item from the listbox
-            string dataset = (string)lstFeatureClasses.SelectedItem;
+            bool refreshActiveView = false;
 
-            //cast the workspace into a feature workspace
-            IFeatureWorkspace featureWorkspace = m_workspace as IFeatureWorkspace;
-            if (null == featureWorkspace)
-                return;
-
-            //get a featureclass (or standalone table) from the workspace
-            ITable table = featureWorkspace.OpenTable(dataset) as ITable;
-
-            if (table == null)
+            foreach (string dataset in lstFeatureClasses.SelectedItems)
             {
-                System.Windows.Forms.MessageBox.Show("Failed to open " + dataset);
-                return;
+
+                //get the selected item from the listbox
+                //string dataset = (string)lstFeatureClasses.SelectedItem;
+
+                //cast the workspace into a feature workspace
+                IFeatureWorkspace featureWorkspace = m_workspace as IFeatureWorkspace;
+                if (null == featureWorkspace)
+                    return;
+
+                //get a featureclass (or standalone table) from the workspace
+                ITable table = featureWorkspace.OpenTable(dataset) as ITable;
+
+                if (table == null)
+                {
+                    System.Windows.Forms.MessageBox.Show("Failed to open " + dataset);
+                    return;
+                }
+
+                // figure out if it is a table or featureclass
+
+                IFeatureClass featureClass = table as IFeatureClass;
+
+                if (featureClass == null)
+                {
+                    // add as table
+
+                    IStandaloneTableCollection tableCollection = m_hookHelper.FocusMap as IStandaloneTableCollection;
+                    IStandaloneTable standaloneTable = new StandaloneTableClass();
+                    standaloneTable.Name = ((IDataset)table).Name;
+                    standaloneTable.Table = table;
+                    tableCollection.AddStandaloneTable(standaloneTable);
+
+                    refreshActiveView = true;                   
+
+                }
+                else
+                {
+                    // add as feature class
+
+                    IFeatureLayer featureLayer = new FeatureLayerClass();
+                    featureLayer.Name = featureClass.AliasName;
+                    featureLayer.FeatureClass = featureClass;
+                    m_hookHelper.FocusMap.AddLayer((ILayer)featureLayer);
+
+                }
             }
 
-            // figure out if it is a table or featureclass
-
-            IFeatureClass featureClass = table as IFeatureClass;
-
-            if (featureClass == null)
-            {
-                // add as table
-                
-                IStandaloneTableCollection tableCollection = m_hookHelper.FocusMap as IStandaloneTableCollection;
-                IStandaloneTable standaloneTable = new StandaloneTableClass();
-                standaloneTable.Name = ((IDataset)table).Name;
-                standaloneTable.Table = table;
-                tableCollection.AddStandaloneTable(standaloneTable);
-
+            if (refreshActiveView)
                 m_hookHelper.ActiveView.ContentsChanged();
-
-            }
-            else
-            {
-                // add as feature class
-                
-                IFeatureLayer featureLayer = new FeatureLayerClass();
-                featureLayer.Name = featureClass.AliasName;
-                featureLayer.FeatureClass = featureClass;
-                m_hookHelper.FocusMap.AddLayer((ILayer)featureLayer);
-
-            }
             
         }
         #endregion
