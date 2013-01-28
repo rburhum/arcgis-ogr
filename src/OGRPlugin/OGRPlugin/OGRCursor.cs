@@ -47,7 +47,14 @@ namespace GDAL.OGRPlugin
         private OGRDataset m_pDataset;
 
         private String m_whereClause;
+        
+        //m_esriQueryFieldMap is an array passed by the ArcObjects framework that contains
+        //an array that we should use to limit the columns we should return. it is an optimization
+        //on the ArcObjects side to avoid fetching the entire row. Honestly, it is a mindf*ck because
+        //it is mapping values that are already mapped.
+        //
         private System.Array m_esriQueryFieldMap;
+
         private IEnvelope m_envelope;
 
         private OSGeo.OGR.Feature m_currentOGRFeature;
@@ -112,38 +119,65 @@ namespace GDAL.OGRPlugin
                 if (m_currentOGRFeature == null)
                     return -1;
 
-                // loop and only set values in the rowbuffer
-                // that were requested from the fieldMap
+                // Loop and only set values in the rowbuffer
+                // that were requested by ArcGIS.
+                // from the ArcObjects Dev documentation:
+                //
+                // http://resources.arcgis.com/en/help/arcobjects-net/componenthelp/index.html#//002500000659000000
+                //
+                // "The field map is an array of longs that maps fields in the record into the 
+                // values array. The method should get the field set from the dataset. For each
+                // field in the field set, get the corresponding value in the field map. If the 
+                // value is -1, don’t copy the field. Otherwise, the value in the field map is 
+                // the index in the values array where the data should be copied."
+                //
 
-                int count = m_esriQueryFieldMap.GetLength(0);
+                IFields pFields = m_pDataset.get_Fields(0);
+                int fieldCount = pFields.FieldCount;
 
-                for (int i = 0; i < count; i++)
+                for (int i = 0; i < fieldCount; i++)
                 {
                     int esriFieldIndex = (int)m_esriQueryFieldMap.GetValue(i);
 
-                    // have to skip 1) objectid and 2) geometry field or we will get an ESRI
-                    // exception. Also have to skip anything that the query map is asking to ignore
+                    if (esriFieldIndex == -1 ||
+                        i == m_pDataset.get_OIDFieldIndex(0) ||
+                        i == m_pDataset.get_ShapeFieldIndex(0))
+                        continue; 
 
-                    if (esriFieldIndex == -1 || 
-                        esriFieldIndex == m_pDataset.get_OIDFieldIndex(0) ||
-                        esriFieldIndex == m_pDataset.get_ShapeFieldIndex(0))
+                    IField pField = pFields.get_Field(i);
+                    object val = null;
+
+                    // DANGER - POTENTIAL BUG - Workaround. For some reason, in ArcGIS 10.1SP1 I am
+                    // getting fields that should not be editable passed in to map into!!!?!? I am 
+                    // skipping those here. In theory, since we are the DataSource provider, we should be able to
+                    // use a lower level set value that skips polymorphic behavior and hence allows
+                    // the write to happen even in non-editable fields. Something analogous to 
+                    // ITableWrite::WriteRow, but for Rows. We don't have that, so I skip those values for those 
+                    // rows.
+                    if (!pFields.get_Field(esriFieldIndex).Editable)
                         continue;
 
                     try
                     {
+                        val = m_pDataset.get_mapped_value(m_currentOGRFeature, i);
 
-                        IField valField = m_pDataset.get_Fields(0).get_Field(i);
+                        // We have the value that we have mapped from OGR -> esriFieldIndex. Now
+                        // we need to apply a *second* mapping from esriFieldIndex -> esriQueryFieldMapEsriIndex
+                        // hence why you see the i below.
 
-                        object val = m_pDataset.get_mapped_value(m_currentOGRFeature, i);
-
-                        row.set_Value(i, val);
+                        row.set_Value(esriFieldIndex, val);
                     }
                     catch (Exception ex)
                     {
                         // skip values that fail to be set but continue doing it anyway
-                        System.Diagnostics.Debug.WriteLine(ex.Message);
+                        string msg = String.Format("OGRFID:[{0}] esriFieldName:[{1}] esriFieldIndex:[{2}] esriValue:[{3}] Exception:[{4}]",
+                              m_currentOGRFeature.GetFID(),
+                              pField.Name,
+                              esriFieldIndex,
+                              val != null ? val.ToString() : "<not set>",
+                              ex.Message);
+                        System.Diagnostics.Debug.WriteLine(msg);
                     }
-
                 }
 
                 return m_currentOGRFeature.GetFID();
