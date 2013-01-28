@@ -117,9 +117,9 @@ namespace GDAL.OGRPlugin
                     
                 case OSGeo.OGR.FieldType.OFTReal:
                     return feature.GetFieldAsDouble(ogrIndex);
-                    
+
                 case OSGeo.OGR.FieldType.OFTString:
-                    return feature.GetFieldAsString(ogrIndex);
+                    return ogr_utils.ghetto_fix_ogr_string(feature.GetFieldAsString(ogrIndex));                
 
                 case OSGeo.OGR.FieldType.OFTBinary:
                      
@@ -136,11 +136,10 @@ namespace GDAL.OGRPlugin
 
                         DateTime date = new DateTime(year, month, day, hour, minute, second);
                         return date;
-                    }
-                    
+                    }                    
                     
                 default:
-                    return feature.GetFieldAsString(ogrIndex); //most things coerce as strings
+                    return ogr_utils.ghetto_fix_ogr_string(feature.GetFieldAsString(ogrIndex)); //most things coerce as strings
             }
         }
 

@@ -303,6 +303,22 @@ namespace GDAL.OGRPlugin
             return true;
         }
 
+        // Until the OGR bindings handle UTF16 chars correctly we have to do this ugly workaround.
+        // For background on the issue, see http://trac.osgeo.org/gdal/ticket/4971
+        // The workaround involves grabbing the utf16 bytes and just picking even characters
+        // and shoving them in byte array. Then treat those as utf8 bytes and convert them to utf16
+
+        public static string ghetto_fix_ogr_string(string ogr_fake_utf16)
+        {
+            byte[] utf16Bytes = Encoding.Unicode.GetBytes(ogr_fake_utf16);
+            int byteCount = utf16Bytes.Length;
+            byte[] utf8Bytes = new byte[byteCount / 2];
+
+            for (int i=0, j=0; i < byteCount / 2; i++, j+=2)
+                utf8Bytes[i] = utf16Bytes[j];
+
+            return Encoding.UTF8.GetString(utf8Bytes,0, utf8Bytes.Length);
+        }
 
     }
 }
