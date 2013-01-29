@@ -121,16 +121,12 @@ namespace GDAL.OGRPlugin
 
                 // Loop and only set values in the rowbuffer
                 // that were requested by ArcGIS.
-                // from the ArcObjects Dev documentation:
-                //
-                // http://resources.arcgis.com/en/help/arcobjects-net/componenthelp/index.html#//002500000659000000
-                //
-                // "The field map is an array of longs that maps fields in the record into the 
-                // values array. The method should get the field set from the dataset. For each
-                // field in the field set, get the corresponding value in the field map. If the 
-                // value is -1, don’t copy the field. Otherwise, the value in the field map is 
-                // the index in the values array where the data should be copied."
-                //
+                // 
+                // Ignore the ArcObjects documentation because it says I should use the field map
+                // and that is straight out incorrect. Only copy values if the fieldmap has any value
+                // besides -1. Othewise, ignore whatever map it is asking to copy to and simply copy
+                // to the right field.
+               
 
                 IFields pFields = m_pDataset.get_Fields(0);
                 int fieldCount = pFields.FieldCount;
@@ -154,18 +150,14 @@ namespace GDAL.OGRPlugin
                     // the write to happen even in non-editable fields. Something analogous to 
                     // ITableWrite::WriteRow, but for Rows. We don't have that, so I skip those values for those 
                     // rows.
-                    if (!pFields.get_Field(esriFieldIndex).Editable)
+                    if (!pFields.get_Field(i).Editable)
                         continue;
 
                     try
                     {
                         val = m_pDataset.get_mapped_value(m_currentOGRFeature, i);
 
-                        // We have the value that we have mapped from OGR -> esriFieldIndex. Now
-                        // we need to apply a *second* mapping from esriFieldIndex -> esriQueryFieldMapEsriIndex
-                        // hence why you see the i below.
-
-                        row.set_Value(esriFieldIndex, val);
+                        row.set_Value(i, val);
                     }
                     catch (Exception ex)
                     {
