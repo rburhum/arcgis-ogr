@@ -253,5 +253,39 @@ namespace GDAL.OGRPlugin
             ToggleRadioButtons();
         }
 
+        private void cmdInfo_Click(object sender, EventArgs e)
+        {
+            int count = OSGeo.OGR.Ogr.GetDriverCount();
+
+            string msg = "";
+            string line = "";
+
+            for (int i = 0; i < count; i++)
+            {
+                string name = OSGeo.OGR.Ogr.GetDriver(i).GetName();
+                line += String.Format("{0}) {1}",i+1, name) ;
+
+                if (i != count - 1)
+                {
+                    if (name.Length <= 5)
+                        line += "\t\t\t";
+                    else
+                        line += "\t\t";
+                }
+
+                if (i % 2 == 1)
+                {
+                    msg += line + "\r\n";
+                    line = "";
+                }
+            }
+
+            msg += line;
+
+            System.Windows.Forms.MessageBox.Show(msg, "Installed OGR Drivers");
+
+            
+        }
+
     }
 }

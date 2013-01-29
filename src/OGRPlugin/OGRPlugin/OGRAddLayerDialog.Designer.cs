@@ -56,6 +56,7 @@ namespace GDAL.OGRPlugin
             this.label2 = new System.Windows.Forms.Label();
             this.txtConnString = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.cmdInfo = new System.Windows.Forms.Button();
             this.groupFromFile.SuspendLayout();
             this.groupFromConnString.SuspendLayout();
             this.SuspendLayout();
@@ -203,11 +204,22 @@ namespace GDAL.OGRPlugin
             this.label1.TabIndex = 5;
             this.label1.Text = "Datasets:";
             // 
+            // cmdInfo
+            // 
+            this.cmdInfo.Location = new System.Drawing.Point(452, 12);
+            this.cmdInfo.Name = "cmdInfo";
+            this.cmdInfo.Size = new System.Drawing.Size(107, 23);
+            this.cmdInfo.TabIndex = 8;
+            this.cmdInfo.Text = "Installed Drivers";
+            this.cmdInfo.UseVisualStyleBackColor = true;
+            this.cmdInfo.Click += new System.EventHandler(this.cmdInfo_Click);
+            // 
             // OGRAddLayerDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(579, 529);
+            this.Controls.Add(this.cmdInfo);
             this.Controls.Add(this.groupFromConnString);
             this.Controls.Add(this.radioFromFile);
             this.Controls.Add(this.radioFromConnstring);
@@ -246,5 +258,6 @@ namespace GDAL.OGRPlugin
         private System.Windows.Forms.Button btnConnect;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtConnString;
+        private System.Windows.Forms.Button cmdInfo;
     }
 }
