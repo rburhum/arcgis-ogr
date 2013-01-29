@@ -199,6 +199,14 @@ namespace GDAL.OGRPlugin
             {
                 OSGeo.OGR.Geometry ogrGeometry = m_currentOGRFeature.GetGeometryRef();
 
+                // Flatten the geometry and ommit Z value until we add manual 
+                // Z-value zupport
+                // See: 
+                // https://github.com/RBURHUM/arcgis-ogr/issues/11
+                // 
+                //
+                ogrGeometry.FlattenTo2D();
+
                 //export geometry from OGR to WKB
                 int wkbSize = ogrGeometry.WkbSize();
                 byte[] wkbBuffer = new byte[wkbSize];
