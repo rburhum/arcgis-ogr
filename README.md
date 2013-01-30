@@ -17,6 +17,22 @@ Some popular formats include:
 * <a href="http://www.gdal.org/ogr/drv_xls.html">Microsoft Office Excel Format</a>
 * ...and <a href="http://www.gdal.org/ogr/ogr_formats.html">much much more!</a>
 
+## Download / Ready to use Installer (for ArcGIS 10.1SP1)
+ 
+<h3> <a href="https://dl.dropbox.com/u/4779803/gdal-ogrplugin/setup.exe">You can find an installer for (v0.6.1) here.</a></h3>
+They are known to work on ArcGIS 10.1 SP1. For other versions you may have to compile the binaries yourself (they *may* work, although I have not tested them).
+
+The current installer supports the following formats:
+
+<img src="http://i.imgur.com/dJB6Iuc.png" />
+
+* Run ArcMap and go to Categories, the command should appear there (search for OGR)
+* If succesful you will see a new "Add OGR Layer" command that was added. Drag it to a toolbar...
+
+<img src="http://i.imgur.com/s3qk7.png" />
+
+* Enjoy.
+
 ## Screenshots
 
 * OGR Add data dialog
@@ -33,16 +49,6 @@ Some popular formats include:
 ## License
 BSD License. For those of you not in Open Source geekdom, it means "hella free". You can pretty much, do whatever you want with it - Commercial or not.
 We ask that you please contribute any modifications back if you are kind enough to make modifications, but you are not forced to.
-
-## Download / Ready to use Installer (for ArcGIS 10.1SP1)
- <a href="https://dl.dropbox.com/u/4779803/gdal-ogrplugin/setup.exe">You can find an experimental installer (v0.5) here.</a> They are known to work on ArcGIS 10.1 SP1. For other versions you may have to compile the binaries yourself (they *may* work, although I have not tested them).
-
-* Run ArcMap and go to Categories, the command should appear there (search for OGR)
-* If succesful you will see a new "Add OGR Layer" command that was added. Drag it to a toolbar...
-
-<img src="http://i.imgur.com/s3qk7.png" />
-
-* Enjoy.
 
 ## User Information (for Developer information see below)
 
