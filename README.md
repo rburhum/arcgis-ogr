@@ -17,7 +17,7 @@ Some popular formats include:
 * <a href="http://www.gdal.org/ogr/drv_xls.html">Microsoft Office Excel Format</a>
 * ...and <a href="http://www.gdal.org/ogr/ogr_formats.html">much much more!</a>
 
-## Download / Ready to use Installer (for ArcGIS 10.1SP1)
+## Download / Ready to use Installer (for ArcGIS 10.1SP1) - FYI - This is beta software!
  
 <h3> <a href="https://dl.dropbox.com/u/4779803/gdal-ogrplugin/setup.exe">You can find an installer for (v0.6.1) here.</a></h3>
 They are known to work on ArcGIS 10.1 SP1. For other versions you may have to compile the binaries yourself (they *may* work, although I have not tested them).
