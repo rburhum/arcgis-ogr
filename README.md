@@ -66,7 +66,7 @@ We ask that you please contribute any modifications back if you are kind enough 
 
 ### Compiling
 This project uses the <a href="http://trac.osgeo.org/gdal/wiki/GdalOgrInCsharp">GDAL CSharp Bindings</a> and of course <a href="http://www.gdal.org/">GDAL</a>, so you will
-need to get binaries for those. If you don't want to go through the trouble of compiling GDAL from scratch, you should try the <a href="http://vbkto.dyndns.org/sdk/">GDAL SDK binaries compiled by Tamas Szekeres</a>
+need to get binaries for those. If you don't want to go through the trouble of compiling GDAL from scratch, you should try the <a href="http://www.gisinternals.com/sdk/">GDAL SDK binaries compiled by Tamas Szekeres</a>
 which I used to write the initial version of this Plugin. **Remember that you need the 32 bit version** because for some God-forsaken reason, ArcMap is still compiled for a 32-bit architecture even in 2012. At the time of this writing,
 I used <a href="http://vbkto.dyndns.org/sdk/PackageList.aspx?file=release-1600-gdal-1-9-1-mapserver-6-0-3.zip">release-1600-gdal-1-9-1-mapserver-6-0-3.zip</a>. By the time you read this, a much newer version must exist.
 
